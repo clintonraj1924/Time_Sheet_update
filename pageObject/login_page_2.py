@@ -98,3 +98,30 @@ class Login_002_Test(Base_Class):
         time.sleep(2)
         Base_Class.click(self, self.btnSave_andsubmit_btn_XPath)
         Base_Class.alert(self)
+
+
+def copy_sheet_1to2(self):  # project, milestone, task_group, task_name, task_description, hours
+    # Load the workbook
+    workbook = openpyxl.load_workbook(self.path)
+
+    # Access a Timesheet
+    worksheet = workbook['Sheet1']
+    logs_sheet = workbook['Sheet1']
+    for row in list(worksheet.iter_rows())[1:]:
+        project = xl_utils.read_data(self.path, "Sheet1", row, 4)
+        milestone = xl_utils.read_data(self.path, "Sheet1", row, 6)
+        task_group = xl_utils.read_data(self.path, "Sheet1", row, 7)
+        task_name = xl_utils.read_data(self.path, "Sheet1", row, 8)
+        task_description = xl_utils.read_data(self.path, "Sheet1", row, 9)
+        hours = xl_utils.read_data(self.path, "Sheet1", row, 12)
+
+        # Append row to Sheet2 starting from the second row
+        logs_sheet.append([project, milestone, task_group, task_name, task_description, hours])
+
+        try:
+            # Delete row from Sheet1
+            worksheet.delete_rows(row[0].row)
+        except Exception as e:
+            print("Failed to delete row from Sheet1: ", str(e))
+    # Save the workbook
+    workbook.save(self.path)
