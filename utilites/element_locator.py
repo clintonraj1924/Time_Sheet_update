@@ -11,6 +11,7 @@ class EL_Locator:
     btnSave_XPath = (By.XPATH, '//input[@class="form-control form-control-sm" and @id="btnSave"]')
     timeSheetApprovelStatus_ID = (By.ID, "app_SP000170_header_lnkAccordion_SP000170")
     i_frame_ID_2 = ("frm_SP000156")
+    date_box_ID = (By.ID, "txtSP000156_AddStartDate1")
     Project_name_ID = (By.ID, "ddlSP000156_AddProject1")
     Milestone_ID = (By.ID, "ddlSP000156_AddMilestone1")
     Task_group_ID = (By.ID, "ddlSP000156_AddTaskGroup1")

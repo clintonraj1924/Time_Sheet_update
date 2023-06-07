@@ -55,9 +55,15 @@ class Login_002_Test(Base_Class):
         self.i_frame(EL_Locator.i_frame_ID_2)
         self.rows = xl_utils.get_row_count(self.path, 'Sheet1')
 
+        # today date
+        self.today_date = time.strftime('%m/%d/%Y')
+
         # 1st row is a header part so using 2, and it will not take a last row so using +1
         for r in range(2, self.rows + 1):
             time.sleep(3)
+            # write data on xl sheet
+            xl_utils.write_data(self.path, "Sheet1", r, 5, self.today_date)
+            # read data from xl sheet
             project = xl_utils.read_data(self.path, "Sheet1", r, 4)
             milestone = xl_utils.read_data(self.path, "Sheet1", r, 6)
             task_group = xl_utils.read_data(self.path, "Sheet1", r, 7)
@@ -65,6 +71,12 @@ class Login_002_Test(Base_Class):
             task_description = xl_utils.read_data(self.path, "Sheet1", r, 9)
             hours = xl_utils.read_data(self.path, "Sheet1", r, 12)
 
+            # Clear the current value of the start date box
+            # Base_Class.clear(self, EL_Locator.date_box_ID)
+            # Input the new date value
+            # Base_Class.insert_drop_down(self, EL_Locator.date_box_ID, self.today_date)
+
+            # past the corresponding value on timesheet
             time.sleep(2)
             Base_Class.insert_drop_down(self, EL_Locator.Project_name_ID, project)
             time.sleep(2)
@@ -85,29 +97,29 @@ class Login_002_Test(Base_Class):
         Base_Class.click(self, EL_Locator.btnSave_andsubmit_btn_XPath)
         Base_Class.alert(self)
 
+    def copy_sheet_1to2(self):  # project, milestone, task_group, task_name, task_description, hours
+        # Load the workbook
+        workbook = openpyxl.load_workbook(self.path)
 
-def copy_sheet_1to2(self):  # project, milestone, task_group, task_name, task_description, hours
-    # Load the workbook
-    workbook = openpyxl.load_workbook(self.path)
+        # Access a Timesheet
+        worksheet = workbook["Sheet1"]
+        logs_sheet = workbook["Sheet2"]
+        for row in list(worksheet.iter_rows())[1:]:
+            project = xl_utils.read_data(self.path, "Sheet1", row, 4)
+            date = xl_utils.read_data(self.path, "Sheet1", row, 5)
+            milestone = xl_utils.read_data(self.path, "Sheet1", row, 6)
+            task_group = xl_utils.read_data(self.path, "Sheet1", row, 7)
+            task_name = xl_utils.read_data(self.path, "Sheet1", row, 8)
+            task_description = xl_utils.read_data(self.path, "Sheet1", row, 9)
+            hours = xl_utils.read_data(self.path, "Sheet1", row, 12)
 
-    # Access a Timesheet
-    worksheet = workbook['Sheet1']
-    logs_sheet = workbook['Sheet1']
-    for row in list(worksheet.iter_rows())[1:]:
-        project = xl_utils.read_data(self.path, "Sheet1", row, 4)
-        milestone = xl_utils.read_data(self.path, "Sheet1", row, 6)
-        task_group = xl_utils.read_data(self.path, "Sheet1", row, 7)
-        task_name = xl_utils.read_data(self.path, "Sheet1", row, 8)
-        task_description = xl_utils.read_data(self.path, "Sheet1", row, 9)
-        hours = xl_utils.read_data(self.path, "Sheet1", row, 12)
+            # Append row to Sheet2 starting from the second row
+            logs_sheet.append([project, date, milestone, task_group, task_name, task_description, hours])
 
-        # Append row to Sheet2 starting from the second row
-        logs_sheet.append([project, milestone, task_group, task_name, task_description, hours])
-
-        try:
-            # Delete row from Sheet1
-            worksheet.delete_rows(row[0].row)
-        except Exception as e:
-            print("Failed to delete row from Sheet1: ", str(e))
-    # Save the workbook
-    workbook.save(self.path)
+            try:
+                # Delete row from Sheet1
+                worksheet.delete_rows(row[0].row)
+            except Exception as e:
+                print("Failed to delete row from Sheet1: ", str(e))
+            # Save the workbook
+            workbook.save(self.path)

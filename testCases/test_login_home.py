@@ -31,6 +31,6 @@ class Test_Login_Home:
         self.ls.test_tim_app_status()
         self.ls.test_excell_operation()
         # self.ls.clk_save_submit_btn()
-        self.ls.copy_sheet_1to2()
+        # self.ls.copy_sheet_1to2()
 
 

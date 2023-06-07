@@ -9,6 +9,8 @@ def setup(browser):
         driver = webdriver.Chrome()
     elif browser == "firefox":
         driver = webdriver.Firefox()
+    elif browser == "Edge":
+        driver = webdriver.Ie
     else:
         driver = webdriver.Chrome()
     driver.maximize_window()

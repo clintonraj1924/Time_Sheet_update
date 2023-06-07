@@ -78,3 +78,7 @@ class Base_Class:
         except Exception as e:
             print("Failed to Could not locate element with visible text: ", str(e))
             self.driver.save_screenshot(".\\screenShots\\" + "timesheet_xlsheet.png")
+
+    def clear(self, by_locator):
+        self.wait.until((EC.visibility_of_element_located(by_locator))).clear()
+
